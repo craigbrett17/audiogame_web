@@ -1,0 +1,10 @@
+{
+  "name": "AudioGameWeb",
+  "version": "1.0.0",
+  "license": "Mine",
+  "description": "An audio game on the web. It's here!",
+  "dependencies": {
+    "sono": "^2.1.4",
+    "ts-keycode-enum": "^1.0.4"
+  }
+}
