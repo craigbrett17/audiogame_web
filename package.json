@@ -5,6 +5,9 @@
   "description": "An audio game on the web. It's here!",
   "dependencies": {
     "sono": "^2.1.4",
-    "ts-keycode-enum": "^1.0.4"
+    "ts-keycode-enum": "^1.0.4",
+    "ts-loader": "^3.1.1",
+    "typings": "^2.1.1",
+    "webpack": "^3.8.1"
   }
 }

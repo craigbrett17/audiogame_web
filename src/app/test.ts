@@ -1,8 +1,9 @@
 import { Key } from 'ts-keycode-enum';
 
-document.getElementById("app-area").onkeydown = (ev => {
-  const outputElement = document.getElementById("screen-output")
-  switch (ev.which) {
+window.onload = () => {
+  document.getElementById("app-area").onkeydown = (ev => {
+    const outputElement = document.getElementById("screen-output")
+    switch (ev.which) {
       case Key.UpArrow:
         outputElement.innerText = "You pressed the up arrow";
         break;
@@ -18,5 +19,6 @@ document.getElementById("app-area").onkeydown = (ev => {
       default:
         outputElement.innerText = "You pressed some other random key";
         break;
-  }
-})
+    }
+  })
+}
