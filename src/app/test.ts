@@ -1,4 +1,5 @@
 import { Key } from 'ts-keycode-enum';
+import './main.css'
 
 window.onload = () => {
   document.getElementById("app-area").onkeydown = (ev => {
