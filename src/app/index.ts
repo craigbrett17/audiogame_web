@@ -13,38 +13,33 @@ sono.panner.setListenerPosition(0, 0, 0)
 sono.panner.setListenerOrientation(0, 0, -1)
 let listenerX = 0, listenerY = 0, listenerZ = 0
 
-keyDownEventTracker(document.getElementById("app-area"), ev => {
+keyDownEventTracker(document.getElementById("app-area"), 250, ev => {
   const outputElement = document.getElementById("screen-output")
-  let sound
-
+  sono.create({ src: 'sounds/keyok.wav', id: "keyok1", effects: [ sono.panner(), sono.echo(), sono.reverb() ] });
+  sono.create({ src: 'sounds/keyok1.wav', id: "keyok2", effects: [ sono.panner(), sono.echo(), sono.reverb() ] });
+  sono.create({ src: 'sounds/keyok2.wav', id: "keyok3", effects: [ sono.panner(), sono.echo(), sono.reverb() ] });
+  sono.create({ src: 'sounds/keyok3.wav', id: "keyok4", effects: [ sono.panner(), sono.echo(), sono.reverb() ] });
+  
   switch (ev.which) {
     case Key.UpArrow:
       listenerY += 1
       sono.panner.setListenerPosition(listenerX, listenerY, listenerZ)
-      sound = sono.create({ src: 'sounds/keyok.wav', effects: [ sono.panner(), sono.echo(), sono.reverb() ] });
-      sound.effects[0].setPosition(0, 100, 0)
-      sound.play();
+      sono.get('keyok1').play()
       break;
     case Key.DownArrow:
       listenerY -= 1
       sono.panner.setListenerPosition(listenerX, listenerY, listenerZ)
-      sound = sono.create({ src: 'sounds/keyok1.wav', effects: [ sono.panner(), sono.echo(), sono.reverb() ] });
-      sound.effects[0].setPosition(0, -100, 0)
-      sound.play();
+      sono.get('keyok2').play()
       break;
     case Key.LeftArrow:
       listenerX -= 1
       sono.panner.setListenerPosition(listenerX, listenerY, listenerZ)  
-      sound = sono.create({ src: 'sounds/keyok2.wav', effects: [ sono.panner(), sono.echo(), sono.reverb() ] });
-      sound.effects[0].setPosition(-100, 0, 0)
-      sound.play();
+      sono.get('keyok3').play()
       break;
     case Key.RightArrow:
       listenerX += 1
       sono.panner.setListenerPosition(listenerX, listenerY, listenerZ)  
-      sound = sono.create({ src: 'sounds/keyok3.wav', effects: [ sono.panner(), sono.echo(), sono.reverb() ] });
-      sound.effects[0].setPosition(100, 0, 0)
-      sound.play();
+      sono.get('keyok4').play()
       break;
     default:
       outputElement.innerText = "You pressed some other random key";
