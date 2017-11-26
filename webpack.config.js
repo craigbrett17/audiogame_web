@@ -6,7 +6,7 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 module.exports = {
     devtool: 'inline-source-map',
     entry: [
-        './src/app/test.ts' // the actual entry file
+        './src/app/index.ts' // the actual entry file
     ],
     target: 'web',
     output: {
@@ -35,8 +35,9 @@ module.exports = {
             // all files with a `.ts` or `.tsx` extension will be handled by `ts-loader`
             { test: /\.tsx?$/, loaders: ['ts-loader'] },
             // handle loading fonts and svgs and images into the output as well
-            { test: /\.(svg|png|jpe?g|gif)(\?\S*)?$/, loader: 'url?limit=100000&name=img/[name].[ext]' },
-            { test: /\.(eot|woff|woff2|ttf)(\?\S*)?$/, loader: 'url?limit=100000&name=fonts/[name].[ext]' },
+            { test: /\.(svg|png|jpe?g|gif)(\?\S*)?$/, loader: 'url-loader?limit=100000&name=img/[name].[ext]' },
+            { test: /\.(eot|woff|woff2|ttf)(\?\S*)?$/, loader: 'url-loader?limit=100000&name=fonts/[name].[ext]' },
+            { test: /\.(mp3|wav|ogg)(\?\S*)?$/, loader: 'file-loader?name=sounds/[name].[ext]' },
             // inject CSS as well
             { test: /\.css$/, use: ['style-loader', 'css-loader'] }
         ]
