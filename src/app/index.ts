@@ -14,6 +14,7 @@ import '../sounds/run1.wav'
 import '../sounds/run2.wav'
 import '../sounds/run3.wav'
 import '../sounds/gate.wav'
+import '../sounds/keyok1.wav'
 
 // the little trick with the pov is that the pov doesn't move, the other objects' Y coordinate does
 // neat, huh?
@@ -27,6 +28,8 @@ sono.panner.defaults.maxDistance = 50
 const outputElement = document.getElementById("screen-output")
 let gameState = GameState.PreStart
 let score = 0
+const mapWidth = 5
+const obsticles: Array<SoundSource> = []
 let gameLoopHandle: number
 const runSounds = [
   sono.create('sounds/run1.wav'),
@@ -72,9 +75,6 @@ function startGame(): void {
   // set up the game loop
   setTimeout(() => {
     gameLoopHandle = setInterval(gameLoop, 150)
-    setTimeout(() => {
-      gameOver()
-    }, 30000);
   }, 3000);
 }
 
@@ -86,12 +86,42 @@ function gameLoop() {
 
   runSounds[Math.floor(Math.random()*runSounds.length)].play()
   score += 1
+
+  for (let index = obsticles.length - 1; index >= 0; index--) {
+    const obsticle = obsticles[index]
+    obsticle.move(obsticle.X, obsticle.Y - 1, obsticle.Z)
+    console.log("Obsticle %d: %o", index, obsticle)
+    
+    if (pov.X == obsticle.X && pov.Y == obsticle.Y && pov.Z == obsticle.Z) {
+      console.log("Collision!")
+      // CRASH!
+      gameOver()
+      return
+    }
+
+    if (obsticle.Y < -10) {
+      console.log("Obsticle %d to be unloaded")
+      obsticle.unloadAllSounds()
+      obsticles.splice(index, 1)
+    }
+  }
+
+  // add new obsticles
+
+  if (score % 20 == 0) {
+    const topRandomNumber = mapWidth * 2 + 1
+    const x = Math.floor(Math.random() * topRandomNumber) - (mapWidth + 1)
+    const obsticle = new SoundSource(x, 50, 0)
+    console.log("Adding new obsticle: ", obsticle)
+    obsticle.play({ src: 'sounds/keyok1.wav', loop: true })
+    obsticles.push(obsticle)
+  }
 }
 
 function inGameKeyPressHandler(ev: KeyboardEvent): void {
   switch (ev.which) {
     case Key.LeftArrow:
-      if (pov.X > -10) {
+      if (pov.X > 0 - mapWidth) {
         pov.X -= 1
       } else {
         sono.get("bump").effects[0].set(-0.5)
@@ -99,7 +129,7 @@ function inGameKeyPressHandler(ev: KeyboardEvent): void {
       }
       break
     case Key.RightArrow:
-      if (pov.X < 10) {
+      if (pov.X < 0 + mapWidth) {
         pov.X += 1
       } else {
         sono.get("bump").effects[0].set(0.5)
@@ -111,6 +141,9 @@ function inGameKeyPressHandler(ev: KeyboardEvent): void {
 
 function gameOver() {
   gameState = GameState.Finished
+
+  obsticles.forEach(obsticle => obsticle.unloadAllSounds())
+
   slowDownMusic(() => {
     outputElement.innerText = `Bah! Game over! Your final score is: ${score}`
   })
