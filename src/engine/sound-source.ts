@@ -22,7 +22,7 @@ export class SoundSource extends MobileObject {
      * Plays the sound, setting its panning position to the object's location when it does so
      * @param soundLoadOptions The sounds' config object that will be passed into sound.play. Must include the src for the sound
      */
-    play(soundLoadOptions: { src: string, loop?: boolean, effects?: Array<any>, [extraKeys: string]: any }) {
+    play(soundLoadOptions: { src: string, loop?: boolean, effects?: Array<any>, [extraKeys: string]: any }): void {
         const soundId = `${this.uuid}/${soundLoadOptions.src}`
         const existing = sono.get(soundId)
         if (existing) {
@@ -47,7 +47,7 @@ export class SoundSource extends MobileObject {
         }
     }
 
-    move(x: number, y: number, z: number) {
+    move(x: number, y: number, z: number): void {
         super.move(x, y, z)
         this.loadedSounds.forEach(sound => {
             const panningEffect = SoundSource.findPanningEffect(sound)
@@ -59,5 +59,11 @@ export class SoundSource extends MobileObject {
 
     private static findPanningEffect(sound: any): any {
         return sound.effects.find(eff => eff._in.panningModel)
+    }
+
+    unloadAllSounds(): void {
+        this.loadedSounds.forEach(sound => {
+            sound.unload()
+        })
     }
 }
