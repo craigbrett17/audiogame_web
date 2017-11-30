@@ -37,7 +37,8 @@ module.exports = {
             // handle loading fonts and svgs and images into the output as well
             { test: /\.(svg|png|jpe?g|gif)(\?\S*)?$/, loader: 'url-loader?limit=100000&name=img/[name].[ext]' },
             { test: /\.(eot|woff|woff2|ttf)(\?\S*)?$/, loader: 'url-loader?limit=100000&name=fonts/[name].[ext]' },
-            { test: /\.(mp3|wav|ogg)(\?\S*)?$/, loader: 'file-loader?name=sounds/[name].[ext]' },
+            { include: path.resolve(__dirname, 'src/music'), loader: 'url-loader?name=music/[name].[ext]' },
+            { include: path.resolve(__dirname, 'src/sounds'), loader: 'file-loader?name=sounds/[name].[ext]' },
             // inject CSS as well
             { test: /\.css$/, use: ['style-loader', 'css-loader'] }
         ]

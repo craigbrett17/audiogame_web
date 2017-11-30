@@ -1,3 +1,5 @@
+declare function require(s: string): string
+
 import { Key } from 'ts-keycode-enum';
 import './main.css'
 import keyDownEventTracker from '../engine/key-down-tracker'
@@ -7,7 +9,7 @@ import { SoundSource } from '../engine/sound-source'
 import sono from 'sono'
 import 'sono/effects'
 import 'sono/utils'
-import '../sounds/bgm.mp3'
+const bgm = require('../music/bgm.mp3')
 import '../sounds/run1.wav'
 import '../sounds/run2.wav'
 import '../sounds/run3.wav'
@@ -61,7 +63,7 @@ function startGame(): void {
   gameState = GameState.Started
   // start playing the bgm
   sono.create({
-    src: 'sounds/bgm.mp3',
+    src: bgm,
     id: 'bgm',
     volume: 0.5,
     loop: true
