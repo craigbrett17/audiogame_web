@@ -19,7 +19,8 @@ import '../sounds/keyok1.wav'
 // the little trick with the pov is that the pov doesn't move, the other objects' Y coordinate does
 // neat, huh?
 const pov = new PointOfView()
-sono.panner.defaults.maxDistance = 50
+pov.activate()
+sono.panner.defaults.maxDistance = 20
 
 // okay, for brevity, I've dispensed with engineering the actual game and slung it mostly into one file
 // the engine at least keeps some of the more niche bits tidy
@@ -28,14 +29,16 @@ sono.panner.defaults.maxDistance = 50
 const outputElement = document.getElementById("screen-output")
 let gameState = GameState.PreStart
 let score = 0
-const mapWidth = 5
+const mapWidth = 3
 const obsticles: Array<SoundSource> = []
 let gameLoopHandle: number
+let lastLoopXPosition = 0
 const runSounds = [
   sono.create('sounds/run1.wav'),
   sono.create('sounds/run2.wav'),
   sono.create('sounds/run3.wav')
 ]
+runSounds.forEach(sound => sound.effects.add(sono.panner()))
 sono.create({
   src: "sounds/gate.wav",
   id: "bump",
@@ -84,16 +87,25 @@ function gameLoop() {
     return // just stop
   }
 
-  runSounds[Math.floor(Math.random()*runSounds.length)].play()
+  const runSound = runSounds[Math.floor(Math.random()*runSounds.length)]
+  if (lastLoopXPosition < pov.X) {
+    runSound.effects[0].set(0.3)
+  } else if (lastLoopXPosition > pov.X) {
+    runSound.effects[0].set(-0.3)
+  } else {
+    runSound.effects[0].set(0)
+  }
+  runSound.play()
   score += 1
+  lastLoopXPosition = pov.X
 
   for (let index = obsticles.length - 1; index >= 0; index--) {
     const obsticle = obsticles[index]
     obsticle.move(obsticle.X, obsticle.Y - 1, obsticle.Z)
-    console.log("Obsticle %d: %o", index, obsticle)
+    // console.log("Obsticle %d: %o", index, obsticle)
     
     if (pov.X == obsticle.X && pov.Y == obsticle.Y && pov.Z == obsticle.Z) {
-      console.log("Collision!")
+      // console.log("Collision!")
       // CRASH!
       gameOver()
       return
