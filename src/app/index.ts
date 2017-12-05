@@ -6,6 +6,7 @@ import keyDownEventTracker from '../engine/key-down-tracker'
 import GameState from './game-state'
 import { PointOfView } from '../engine/point-of-view'
 import { SoundSource } from '../engine/sound-source'
+import { Obsticle } from './obsticle';
 import sono from 'sono'
 import 'sono/effects'
 import 'sono/utils'
@@ -15,6 +16,16 @@ import '../sounds/run2.wav'
 import '../sounds/run3.wav'
 import '../sounds/gate.wav'
 import '../sounds/keyok1.wav'
+import '../sounds/cow1.mp3'
+import '../sounds/cow2.mp3'
+import '../sounds/cow3.mp3'
+import '../sounds/cow4.mp3'
+import '../sounds/angry cow1.mp3'
+import '../sounds/angry cow2.mp3'
+import '../sounds/sheep1.mp3'
+import '../sounds/sheep2.mp3'
+import '../sounds/sheep long1.mp3'
+import '../sounds/sheep short1.mp3'
 
 // the little trick with the pov is that the pov doesn't move, the other objects' Y coordinate does
 // neat, huh?
@@ -30,7 +41,7 @@ const outputElement = document.getElementById("screen-output")
 let gameState = GameState.PreStart
 let score = 0
 const mapWidth = 3
-const obsticles: Array<SoundSource> = []
+const obsticles: Array<Obsticle> = []
 let gameLoopHandle: number
 let lastLoopXPosition = 0
 const runSounds = [
@@ -38,12 +49,23 @@ const runSounds = [
   sono.create('sounds/run2.wav'),
   sono.create('sounds/run3.wav')
 ]
+// so the running sounds can pan slightly when you move left and right, add a panner to each one
 runSounds.forEach(sound => sound.effects.add(sono.panner()))
 sono.create({
   src: "sounds/gate.wav",
   id: "bump",
   effects: [ sono.panner() ]
 })
+const cowSounds = [
+  { src: 'sounds/cow1.mp3'},
+  { src: 'sounds/cow2.mp3'},
+  { src: 'sounds/cow3.mp3'},
+  { src: 'sounds/cow4.mp3'}
+]
+const cowCollisionSounds = [
+  { src: 'sounds/angry cow2.mp3' },
+  { src: 'sounds/sheep short1.mp3' }
+]
 
 keyDownEventTracker(document.getElementById("app-area"), 250, ev => {
   switch (gameState) {
@@ -71,7 +93,7 @@ function startGame(): void {
   sono.create({
     src: bgm,
     id: 'bgm',
-    volume: 0.5,
+    volume: 0.2,
     loop: true
   }).play()
   
@@ -96,6 +118,7 @@ function gameLoop() {
     runSound.effects[0].set(0)
   }
   runSound.play()
+  
   score += 1
   lastLoopXPosition = pov.X
 
@@ -107,12 +130,13 @@ function gameLoop() {
     if (pov.X == obsticle.X && pov.Y == obsticle.Y && pov.Z == obsticle.Z) {
       // console.log("Collision!")
       // CRASH!
+      obsticle.playCollisionSounds()
       gameOver()
       return
     }
 
     if (obsticle.Y < -10) {
-      console.log("Obsticle %d to be unloaded")
+      // console.log("Obsticle %n to be unloaded", index)
       obsticle.unloadAllSounds()
       obsticles.splice(index, 1)
     }
@@ -123,9 +147,8 @@ function gameLoop() {
   if (score % 20 == 0) {
     const topRandomNumber = mapWidth * 2 + 1
     const x = Math.floor(Math.random() * topRandomNumber) - (mapWidth + 1)
-    const obsticle = new SoundSource(x, 50, 0)
-    console.log("Adding new obsticle: ", obsticle)
-    obsticle.play({ src: 'sounds/keyok1.wav', loop: true })
+    const obsticle = createCow(x, 50, 0)
+    // console.log("Adding new obsticle: ", obsticle)
     obsticles.push(obsticle)
   }
 }
@@ -134,7 +157,7 @@ function inGameKeyPressHandler(ev: KeyboardEvent): void {
   switch (ev.which) {
     case Key.LeftArrow:
       if (pov.X > 0 - mapWidth) {
-        pov.X -= 1
+        pov.move(pov.X - 1, pov.Y, pov.Z)
       } else {
         sono.get("bump").effects[0].set(-0.5)
         sono.get("bump").play()
@@ -142,7 +165,7 @@ function inGameKeyPressHandler(ev: KeyboardEvent): void {
       break
     case Key.RightArrow:
       if (pov.X < 0 + mapWidth) {
-        pov.X += 1
+        pov.move(pov.X + 1, pov.Y, pov.Z)
       } else {
         sono.get("bump").effects[0].set(0.5)
         sono.get("bump").play()
@@ -162,7 +185,7 @@ function gameOver() {
 }
 
 function slowDownMusic(musicStoppedCallback: () => void): void {
-  if (sono.get('bgm').playbackRate > 0.3) {
+  if (sono.get('bgm').playbackRate > 0.4) {
     sono.get('bgm').playbackRate -= 0.02
     setTimeout(() => {
       slowDownMusic(musicStoppedCallback)
@@ -173,6 +196,10 @@ function slowDownMusic(musicStoppedCallback: () => void): void {
       musicStoppedCallback()
     }
   }
+}
+
+function createCow(x: number, y: number, z: number) {
+  return new Obsticle(x, y, z, cowSounds, cowCollisionSounds)
 }
 
 function finishedKeyPressEventHandler(ev: KeyboardEvent): void {

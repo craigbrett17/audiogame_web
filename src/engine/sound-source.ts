@@ -21,44 +21,73 @@ export class SoundSource extends MobileObject {
     /**
      * Plays the sound, setting its panning position to the object's location when it does so
      * @param soundLoadOptions The sounds' config object that will be passed into sound.play. Must include the src for the sound
+     * @param delay The delay to put in before the sound
+     * @param offset The offset to put in to the sound
      */
-    play(soundLoadOptions: { src: string, loop?: boolean, effects?: Array<any>, [extraKeys: string]: any }): void {
-        const soundId = `${this.uuid}/${soundLoadOptions.src}`
-        const existing = sono.get(soundId)
-        if (existing) {
-            // find the panning effect of this sound 
-            const panEffect = SoundSource.findPanningEffect(existing)
-            if (panEffect)
-                panEffect.setPosition(this.X, this.Y, this.Z)
-            if (!existing.playing) {
-                existing.play()
-            }
+    loadAndPlay(soundLoadOptions: { src: string, loop?: boolean, effects?: Array<any>, [extraKeys: string]: any }, delay: number = 0, offset: number = 0): any {
+        const sound = this.loadOrRetrieveSound(soundLoadOptions)
+        this.playSoundFromLocation(sound, delay, offset)
+        return sound
+    }
+
+    playSoundFromLocation(sound: any, delay: number = 0, offset: number = 0): void {
+        const panningEffect = SoundSource.findPanningEffect(sound)
+        if (panningEffect) {
+            panningEffect.setPosition(this.X, this.Y, this.Z)
         } else {
-            const pan = sono.panner()
-            pan.setPosition(this.X, this.Y, this.Z)
-            if (soundLoadOptions.effects) {
-                soundLoadOptions.effects.push(pan)
-            } else {
-                soundLoadOptions.effects = [pan]
-            }
-            if (!soundLoadOptions.id)
-                soundLoadOptions.id = soundId
-            this.loadedSounds.push(sono.create(soundLoadOptions).play())
+            console.warn("Cannot find panning effect for sound ", sound.id)
         }
+        sound.play(delay, offset)
     }
 
     move(x: number, y: number, z: number): void {
         super.move(x, y, z)
-        this.loadedSounds.forEach(sound => {
+        // doing this here means this will change the pan location of already playing sounds
+        this.loadedSounds//.filter(sound => sound.playing)
+                .forEach(sound => {
             const panningEffect = SoundSource.findPanningEffect(sound)
             if (panningEffect) {
                 panningEffect.setPosition(this.X, this.Y, this.Z)
+            } else {
+                console.warn("Unable to find panning effect for sound: ", sound)
             }
         })
     }
 
-    private static findPanningEffect(sound: any): any {
+    protected static findPanningEffect(sound: any): any {
         return sound.effects.find(eff => eff._in.panningModel)
+    }
+
+    /**
+     * Attempts to load the given sound into the engine. If the sound already exists on this object with the given src, it will not be loaded and just returned
+     */
+    loadOrRetrieveSound(soundLoadOptions: { src: string, loop?: boolean, effects?: Array<any>, [extraKeys: string]: any }) {
+        const soundId = `${this.uuid}/${soundLoadOptions.src}`
+        const existing = sono.get(soundId)
+        if (existing) {
+            // the sound already exists, so don't load it again
+            return existing
+        }
+
+        const loadOptions = Object.assign({}, soundLoadOptions)
+        const pan = sono.panner()
+        pan.setPosition(this.X, this.Y, this.Z)
+        if (loadOptions.effects) {
+            loadOptions.effects.push(pan)
+        } else {
+            loadOptions.effects = [pan]
+        }
+        if (!loadOptions.id)
+            loadOptions.id = soundId
+        const sound = sono.create(loadOptions)
+        this.loadedSounds.push(sound)
+        return sound
+    }
+
+    destroyAllSounds(): void {
+        this.loadedSounds.forEach(sound => {
+            sound.destroy()
+        })
     }
 
     unloadAllSounds(): void {
