@@ -93,7 +93,7 @@ function startGame(): void {
   sono.create({
     src: bgm,
     id: 'bgm',
-    volume: 0.2,
+    volume: 0.5,
     loop: true
   }).play()
   
@@ -145,10 +145,25 @@ function gameLoop() {
   // add new obsticles
 
   if (score % 20 == 0) {
-    const topRandomNumber = mapWidth * 2 + 1
-    const x = Math.floor(Math.random() * topRandomNumber) - (mapWidth + 1)
+    const x = pickRandomXCoordinate()
     const obsticle = createCow(x, 30, 0)
-    // console.log("Adding new obsticle: ", obsticle)
+    obsticles.push(obsticle)
+  }
+  if (score > 500 && score % 30 == 0) {
+    const x = pickRandomXCoordinate()
+    const obsticle = createCow(x, 30, 0)
+    obsticles.push(obsticle)
+  }
+  if (score > 1000 && score % 25 == 0) {
+    // hopefully this should be enough to get em
+    const x = pickRandomXCoordinate()
+    const obsticle = createCow(x, 30, 0)
+    obsticles.push(obsticle)
+  }
+  if (score > 2000 && score % 10 == 0) {
+    // alright, have at em
+    const x = pickRandomXCoordinate()
+    const obsticle = createCow(x, 30, 0)
     obsticles.push(obsticle)
   }
 }
@@ -204,4 +219,8 @@ function createCow(x: number, y: number, z: number) {
 
 function finishedKeyPressEventHandler(ev: KeyboardEvent): void {
 
+}
+
+function pickRandomXCoordinate() {
+  return (0 - mapWidth) + Math.floor(Math.random() * (mapWidth * 2 + 1))
 }
