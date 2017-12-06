@@ -50,7 +50,7 @@ const runSounds = [
   sono.create('sounds/run3.wav')
 ]
 // so the running sounds can pan slightly when you move left and right, add a panner to each one
-runSounds.forEach(sound => sound.effects.add(sono.panner()))
+//runSounds.forEach(sound => sound.effects.add(sono.panner()))
 sono.create({
   src: "sounds/gate.wav",
   id: "bump",
@@ -110,13 +110,13 @@ function gameLoop() {
   }
 
   const runSound = runSounds[Math.floor(Math.random()*runSounds.length)]
-  if (lastLoopXPosition < pov.X) {
-    runSound.effects[0].set(0.3)
-  } else if (lastLoopXPosition > pov.X) {
-    runSound.effects[0].set(-0.3)
-  } else {
-    runSound.effects[0].set(0)
-  }
+  // if (lastLoopXPosition < pov.X) {
+  //   runSound.effects[0].setPosition(pov.X - 0.1, pov.Y, pov.Z)
+  // } else if (lastLoopXPosition > pov.X) {
+  //   runSound.effects[0].setPosition(pov.X + 0.1, pov.Y, pov.Z)
+  // } else {
+  //   runSound.effects[0].setPosition(pov.X, pov.Y, pov.Z)
+  // }
   runSound.play()
   
   score += 1
@@ -159,7 +159,7 @@ function inGameKeyPressHandler(ev: KeyboardEvent): void {
       if (pov.X > 0 - mapWidth) {
         pov.move(pov.X - 1, pov.Y, pov.Z)
       } else {
-        sono.get("bump").effects[0].set(-0.5)
+        sono.get("bump").effects[0].setPosition(pov.X - 1, pov.Y, pov.Z)
         sono.get("bump").play()
       }
       break
@@ -167,7 +167,7 @@ function inGameKeyPressHandler(ev: KeyboardEvent): void {
       if (pov.X < 0 + mapWidth) {
         pov.move(pov.X + 1, pov.Y, pov.Z)
       } else {
-        sono.get("bump").effects[0].set(0.5)
+        sono.get("bump").effects[0].setPosition(pov.X + 1, pov.Y, pov.Z)
         sono.get("bump").play()
       }
       break
