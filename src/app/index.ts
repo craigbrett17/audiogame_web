@@ -40,7 +40,7 @@ sono.panner.defaults.maxDistance = 20
 const outputElement = document.getElementById("screen-output")
 let gameState = GameState.PreStart
 let score = 0
-const mapWidth = 3
+const mapWidth = 2
 const obsticles: Array<Obsticle> = []
 let gameLoopHandle: number
 let lastLoopXPosition = 0
@@ -147,7 +147,7 @@ function gameLoop() {
   if (score % 20 == 0) {
     const topRandomNumber = mapWidth * 2 + 1
     const x = Math.floor(Math.random() * topRandomNumber) - (mapWidth + 1)
-    const obsticle = createCow(x, 50, 0)
+    const obsticle = createCow(x, 30, 0)
     // console.log("Adding new obsticle: ", obsticle)
     obsticles.push(obsticle)
   }
