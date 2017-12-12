@@ -26,6 +26,8 @@ import '../sounds/sheep1.mp3'
 import '../sounds/sheep2.mp3'
 import '../sounds/sheep long1.mp3'
 import '../sounds/sheep short1.mp3'
+import '../sounds/sheep1.mp3'
+import '../sounds/sheep2.mp3'
 
 // the little trick with the pov is that the pov doesn't move, the other objects' Y coordinate does
 // neat, huh?
@@ -66,6 +68,10 @@ const cowCollisionSounds = [
   { src: 'sounds/angry cow2.mp3' },
   { src: 'sounds/sheep short1.mp3' }
 ]
+const sheepAmbientSounds = [
+  sono.create('sounds/sheep1.mp3')
+  sono.create('sounds/sheep2.mp3')
+]
 
 keyDownEventTracker(document.getElementById("app-area"), 250, ev => {
   switch (gameState) {
@@ -101,6 +107,11 @@ function startGame(): void {
   setTimeout(() => {
     gameLoopHandle = setInterval(gameLoop, 150)
   }, 3000);
+
+  // setup sheep ambience
+  setTimeout(() => {
+    playSheepSound()
+  }, Math.floor(Math.random() * 2000) + 1000);
 }
 
 function gameLoop() {
@@ -135,7 +146,7 @@ function gameLoop() {
       return
     }
 
-    if (obsticle.Y < -10) {
+    if (obsticle.Y < 0 - sono.panner.defaults.maxDistance) {
       // console.log("Obsticle %n to be unloaded", index)
       obsticle.unloadAllSounds()
       obsticles.splice(index, 1)
@@ -200,7 +211,7 @@ function gameOver() {
 }
 
 function slowDownMusic(musicStoppedCallback: () => void): void {
-  if (sono.get('bgm').playbackRate > 0.4) {
+  if (sono.get('bgm').playbackRate > 0.3) {
     sono.get('bgm').playbackRate -= 0.02
     setTimeout(() => {
       slowDownMusic(musicStoppedCallback)
@@ -223,4 +234,18 @@ function finishedKeyPressEventHandler(ev: KeyboardEvent): void {
 
 function pickRandomXCoordinate() {
   return (0 - mapWidth) + Math.floor(Math.random() * (mapWidth * 2 + 1))
+}
+
+function playSheepSound() {
+  if (gameState != GameState.Started) {
+    return
+  }
+
+  const sound = sheepAmbientSounds[Math.floor(Math.random() * sheepAmbientSounds.length)]
+  sound.playbackRate = 0.75 + Math.random() * 0.5
+  sound.play().once("ended", () => {
+    setTimeout(() => {
+      playSheepSound()
+    }, Math.random() * 7000);
+  })  
 }
