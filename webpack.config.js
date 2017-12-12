@@ -5,13 +5,13 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 module.exports = {
     devtool: 'inline-source-map',
-    entry: [
-        './src/app/index.ts' // the actual entry file
-    ],
+    entry: {
+        'meadow_runner': './src/meadow_runner/app/index.ts'
+    },
     target: 'web',
     output: {
         path: __dirname + '/dist',
-        filename: 'bundle.js',
+        filename: '[name]-bundle.js',
     },
     devServer: {
         contentBase: './dist',
@@ -19,8 +19,13 @@ module.exports = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            title: 'Audio game test page',
-            template: 'index.html'
+            template: 'index.html',
+            chunks: []
+        }),
+        new HtmlWebpackPlugin({
+            template: 'src/meadow_runner/meadowrunner.html',
+            chunks: ['meadow_runner'],
+            filename: 'meadowrunner.html'
         }),
         new CleanWebpackPlugin(['dist']),
         new webpack.NamedModulesPlugin(),
@@ -37,8 +42,8 @@ module.exports = {
             // handle loading fonts and svgs and images into the output as well
             { test: /\.(svg|png|jpe?g|gif)(\?\S*)?$/, loader: 'url-loader?limit=100000&name=img/[name].[ext]' },
             { test: /\.(eot|woff|woff2|ttf)(\?\S*)?$/, loader: 'url-loader?limit=100000&name=fonts/[name].[ext]' },
-            { include: path.resolve(__dirname, 'src/music'), loader: 'url-loader?name=music/[name].[ext]' },
-            { include: path.resolve(__dirname, 'src/sounds'), loader: 'file-loader?name=sounds/[name].[ext]' },
+            { include: path.resolve(__dirname, 'src/meadow_runner/music'), loader: 'url-loader?name=music/[name].[ext]' },
+            { include: path.resolve(__dirname, 'src/meadow_runner/sounds'), loader: 'file-loader?name=sounds/[name].[ext]' },
             // inject CSS as well
             { test: /\.css$/, use: ['style-loader', 'css-loader'] }
         ]

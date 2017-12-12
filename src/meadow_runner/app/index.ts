@@ -2,10 +2,10 @@ declare function require(s: string): string
 
 import { Key } from 'ts-keycode-enum';
 import './main.css'
-import keyDownEventTracker from '../engine/key-down-tracker'
+import keyDownEventTracker from '../../engine/key-down-tracker'
 import GameState from './game-state'
-import { PointOfView } from '../engine/point-of-view'
-import { SoundSource } from '../engine/sound-source'
+import { PointOfView } from '../../engine/point-of-view'
+import { SoundSource } from '../../engine/sound-source'
 import { Obsticle } from './obsticle';
 import sono from 'sono'
 import 'sono/effects'

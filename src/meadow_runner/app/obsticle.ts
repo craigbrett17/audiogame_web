@@ -1,4 +1,4 @@
-import { SoundSource } from '../engine/sound-source'
+import { SoundSource } from '../../engine/sound-source'
 
 // not quite generic enough to be part of an engine
 /** Obsticles represent sound sources that rotate ambient sounds and also play collision sounds */
