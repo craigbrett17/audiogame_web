@@ -15,19 +15,18 @@ import '../sounds/run1.wav'
 import '../sounds/run2.wav'
 import '../sounds/run3.wav'
 import '../sounds/gate.wav'
-import '../sounds/keyok1.wav'
+//import '../sounds/keyok1.wav'
 import '../sounds/cow1.mp3'
 import '../sounds/cow2.mp3'
 import '../sounds/cow3.mp3'
 import '../sounds/cow4.mp3'
-import '../sounds/angry cow1.mp3'
+//import '../sounds/angry cow1.mp3'
 import '../sounds/angry cow2.mp3'
 import '../sounds/sheep1.mp3'
 import '../sounds/sheep2.mp3'
-import '../sounds/sheep long1.mp3'
+//import '../sounds/sheep long1.mp3'
 import '../sounds/sheep short1.mp3'
-import '../sounds/sheep1.mp3'
-import '../sounds/sheep2.mp3'
+import '../sounds/smash.wav'
 
 // the little trick with the pov is that the pov doesn't move, the other objects' Y coordinate does
 // neat, huh?
@@ -65,11 +64,12 @@ const cowSounds = [
   { src: 'sounds/cow4.mp3'}
 ]
 const cowCollisionSounds = [
+  { src: 'sounds/smash.wav' },
   { src: 'sounds/angry cow2.mp3' },
-  { src: 'sounds/sheep short1.mp3' }
+  { src: 'sounds/sheep short1.mp3', delay: 1.5 }
 ]
 const sheepAmbientSounds = [
-  sono.create('sounds/sheep1.mp3')
+  sono.create('sounds/sheep1.mp3'),
   sono.create('sounds/sheep2.mp3')
 ]
 

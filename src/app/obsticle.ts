@@ -34,7 +34,8 @@ export class Obsticle extends SoundSource {
 
     playCollisionSounds(): void {
         for (const sound of this.collisionSounds) {
-            this.playSoundFromLocation(sound)
+            const delay = (sound.config.delay) ? sound.config.delay : 0
+            this.playSoundFromLocation(sound, delay)
         }
     }
 
