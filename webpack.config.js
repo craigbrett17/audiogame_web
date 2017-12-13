@@ -38,7 +38,7 @@ module.exports = {
     module: {
         rules: [
             // all files with a `.ts` or `.tsx` extension will be handled by `ts-loader`
-            { test: /\.tsx?$/, loaders: ['ts-loader'] },
+            { test: /\.tsx?$/, loaders: ['babel-loader', 'ts-loader'] },
             // handle loading fonts and svgs and images into the output as well
             { test: /\.(svg|png|jpe?g|gif)(\?\S*)?$/, loader: 'url-loader?limit=100000&name=img/[name].[ext]' },
             { test: /\.(eot|woff|woff2|ttf)(\?\S*)?$/, loader: 'url-loader?limit=100000&name=fonts/[name].[ext]' },
