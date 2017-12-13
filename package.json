@@ -5,7 +5,8 @@
   "description": "An audio game on the web. It's here!",
   "scripts": {
     "build": "webpack",
-    "start": "webpack-dev-server --open"
+    "start": "webpack-dev-server --open",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "sono": "^2.1.4",
@@ -16,6 +17,7 @@
     "clean-webpack-plugin": "^0.1.17",
     "css-loader": "0.28.7",
     "file-loader": "^0.9.0",
+    "gh-pages": "^1.1.0",
     "html-webpack-plugin": "^2.30.1",
     "resolve-url-loader": "^1.6.0",
     "style-loader": "0.19.0",
