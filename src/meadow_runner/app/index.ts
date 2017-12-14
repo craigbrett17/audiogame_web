@@ -99,7 +99,7 @@ function startGame(): void {
   sono.create({
     src: bgm,
     id: 'bgm',
-    volume: 0.5,
+    volume: 0.3,
     loop: true
   }).play()
   
