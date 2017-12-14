@@ -4,8 +4,10 @@
   "license": "Mine",
   "description": "An audio game on the web. It's here!",
   "scripts": {
-    "build": "webpack",
-    "start": "webpack-dev-server --open",
+    "build": "webpack --config webpack.dev.js",
+    "start": "webpack-dev-server --open --config webpack.dev.js",
+    "build:prod": "webpack --config webpack.production.js",
+    "start:prod": "webpack-dev-server --open --config webpack.production.js",
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
@@ -28,6 +30,7 @@
     "uglifyjs-webpack-plugin": "^1.1.2",
     "url-loader": "^0.5.7",
     "webpack": "3.8.1",
-    "webpack-dev-server": "2.9.4"
+    "webpack-dev-server": "2.9.4",
+    "webpack-merge": "^4.1.1"
   }
 }

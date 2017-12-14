@@ -21,6 +21,17 @@
             "type": "npm",
             "script": "deploy",
             "problemMatcher": []
+        },
+        {
+            "type": "npm",
+            "script": "build:prod",
+            "problemMatcher": [],
+            "group": "build"
+        },
+        {
+            "type": "npm",
+            "script": "start:prod",
+            "problemMatcher": []
         }
     ]
 }

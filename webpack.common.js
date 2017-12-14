@@ -4,7 +4,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 module.exports = {
-    devtool: 'inline-source-map',
     entry: {
         'meadow_runner': './src/meadow_runner/app/index.ts'
     },
@@ -12,10 +11,6 @@ module.exports = {
     output: {
         path: __dirname + '/dist',
         filename: '[name]-bundle.js',
-    },
-    devServer: {
-        contentBase: './dist',
-        hot: true
     },
     plugins: [
         new HtmlWebpackPlugin({
@@ -29,7 +24,6 @@ module.exports = {
         }),
         new CleanWebpackPlugin(['dist']),
         new webpack.NamedModulesPlugin(),
-        new webpack.HotModuleReplacementPlugin()
     ],
     resolve: {
         // Add `.ts` and `.tsx` as a resolvable extension.
