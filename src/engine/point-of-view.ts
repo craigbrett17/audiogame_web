@@ -13,7 +13,7 @@ export class PointOfView extends MobileObject {
     /** The orientation Z direction of the POV */
     OrientationZ: number
 
-    constructor(startX: number = 0, startY: number = 0, startZ: number = 0, orientationX: number = 0, orientationY: number = 0, orientationZ: number = -1) {
+    constructor(startX: number = 0, startY: number = 0, startZ: number = 0, orientationX: number = 0, orientationY: number = 0, orientationZ: number = 0) {
         super(startX, startY, startZ)
         this.OrientationX = orientationX
         this.OrientationY = orientationY
@@ -32,5 +32,15 @@ export class PointOfView extends MobileObject {
     move(x: number, y: number, z: number) {
         super.move(x, y, z)
         sono.panner.setListenerPosition(this.X, this.Y, this.Z)
+    }
+
+    rotateLeft(degrees: number) {
+        this.OrientationX -= degrees * Math.PI / 180
+        sono.panner.setListenerOrientation(this.OrientationX, this.OrientationY, this.OrientationZ)        
+    }
+
+    rotateRight(degrees: number) {
+        this.OrientationX += degrees * Math.PI / 180
+        sono.panner.setListenerOrientation(this.OrientationX, this.OrientationY, this.OrientationZ)        
     }
 }

@@ -5,7 +5,8 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 module.exports = {
     entry: {
-        'meadow_runner': './src/meadow_runner/app/index.ts'
+        'meadow_runner': './src/meadow_runner/app/index.ts',
+        'walking_demo': './src/walking_demo/app/index.ts'
     },
     target: 'web',
     output: {
@@ -21,6 +22,11 @@ module.exports = {
             template: 'src/meadow_runner/meadowrunner.html',
             chunks: ['meadow_runner'],
             filename: 'meadowrunner.html'
+        }),
+        new HtmlWebpackPlugin({
+            template: 'src/walking_demo/walking.html',
+            chunks: ['walking_demo'],
+            filename: 'walkingdemo.html'
         }),
         new CleanWebpackPlugin(['dist']),
         new webpack.NamedModulesPlugin(),
@@ -38,6 +44,8 @@ module.exports = {
             { test: /\.(eot|woff|woff2|ttf)(\?\S*)?$/, loader: 'url-loader?limit=100000&name=fonts/[name].[ext]' },
             { include: path.resolve(__dirname, 'src/meadow_runner/music'), loader: 'url-loader?name=music/[name].[ext]' },
             { include: path.resolve(__dirname, 'src/meadow_runner/sounds'), loader: 'file-loader?name=sounds/[name].[ext]' },
+            { include: path.resolve(__dirname, 'src/walking_demo/music'), loader: 'url-loader?name=music/[name].[ext]' },
+            { include: path.resolve(__dirname, 'src/walking_demo/sounds'), loader: 'file-loader?name=sounds/[name].[ext]' },
             // inject CSS as well
             { test: /\.css$/, use: ['style-loader', 'css-loader'] }
         ]
